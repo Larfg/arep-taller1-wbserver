@@ -1,4 +1,4 @@
-package arep;
+package edu.escuelaing.app;
 
 import java.io.*;
 import java.net.*;
@@ -7,23 +7,25 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class NetClient {
-    //title de la forma palabra1+palabra2+palabra3...
+    // title de la forma palabra1+palabra2+palabra3...
     static String title = null;
     static int year = 0;
     static String plot = null;
     static ArrayList<String> plots = new ArrayList<String>(Arrays.asList("Full", "Short"));
+    static String pelicula = "";
 
-    public static void main(String[] args) {
-        testValues();
+    public String consultApi(String titulo) {
+        title = titulo;
         String urlString = "http://www.omdbapi.com/";
-        if (title != null){
+        if (title != null) {
             urlString += "?t=" + title;
-            if (year!= 0){
+            if (year != 0) {
                 urlString += "&y=" + year;
-                if (!Objects.equals(plot, plots.get(0))){
-                    urlString += "&plot=" + plot;
-                }
             }
+            if (!Objects.equals(plot, plots.get(0))) {
+                urlString += "&plot=" + plot;
+            }
+
         }
         urlString += "&apikey=fd52b2b3";
         try {
@@ -38,22 +40,25 @@ public class NetClient {
             BufferedReader br = new BufferedReader(new InputStreamReader(
                     (conn.getInputStream())));
             String output;
-            System.out.println("Output from Server .... \n");
+            String pelicula = "";
             while ((output = br.readLine()) != null) {
-                System.out.println(output);
+                pelicula+=output;
             }
             conn.disconnect();
+            return pelicula;
         } catch (MalformedURLException e) {
             e.printStackTrace();
+            return "error";
         } catch (IOException e) {
             e.printStackTrace();
+            return "error";
         }
 
     }
 
-    private static void testValues() {
-        title = "Die+Hard";
-        year = 0;
-        plot = plots.get(0);
+
+    public static void setTitulo(String titulo) {
+        title = titulo;
     }
+
 }

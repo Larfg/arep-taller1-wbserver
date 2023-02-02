@@ -1,4 +1,4 @@
-package arep;
+package edu.escuelaing.app;
 
 import static org.junit.Assert.assertTrue;
 
