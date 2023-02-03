@@ -4,14 +4,21 @@ import java.net.*;
 import java.io.*;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
 /**
+ * Servidor ws que nos permite consultar una pelicula por su titulo
  * @author Luis Felipe Giraldo Rodriguez
  * @version 1.0
  */
 public class HttpServer {
-
+    /**
+     * Metodo principal que nos inicia un servidor socket http, que cuando recibe una peticion consulta el titulo de una pelicula.
+     * @param args
+     * @throws IOException
+     */
     public static void main(String[] args) throws IOException {
         System.out.println("Servidor funcionando ...");
+        //Estructura concurrente que nos permite almacenar las peliculas que ya fueron consultadas
         Map<String, String> cache = new ConcurrentHashMap<String, String>();
         String lastLine = "";
         ServerSocket serverSocket = null;
@@ -41,17 +48,16 @@ public class HttpServer {
                 if(inputLine.contains("titulo")){
                     lastLine = inputLine.split(":")[1].replace(" ","+");
                 }
-                // Aqui se recibe el json de la consulta y se hace la consulta
                 if (!in.ready()) {
                     break;
                 }
             }
-            // El output line debería ser el JSON de la respuesta de la API
+            //Encabezado de la peticion con cors habilitado y content type json
             outputLine = "HTTP/1.1 200 OK\r\n"
                     + "Access-Control-Allow-Origin: *\r\n"
                     + "Content-Type:application/json\r\n"
                     + "\r\n"
-                    // Content type para json
+                    //Consulta del api del elemento
                     + netClient.consultaApiMemo(lastLine,cache);
             out.println(outputLine);
             out.close();

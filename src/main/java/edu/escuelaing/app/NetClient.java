@@ -6,7 +6,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
-
+/**
+ * Clase que nos permite comunicarnos con un api y realizar una petición
+ * @author Luis Giraldo
+ * @version 1.0
+ */
 public class NetClient {
     // title de la forma palabra1+palabra2+palabra3...
     static String title = null;
@@ -15,6 +19,11 @@ public class NetClient {
     static ArrayList<String> plots = new ArrayList<String>(Arrays.asList("Full", "Short"));
     static String pelicula = "";
 
+    /**
+     * Metodo que a partir de un titulo realiza una consulta de un api determinada
+     * @param titulo
+     * @return String con la información de la pelicula con el titulo
+     */
     public String consultApi(String titulo) {
         title = titulo;
         String urlString = "http://www.omdbapi.com/";
@@ -57,6 +66,13 @@ public class NetClient {
 
     }
 
+    /**
+     * Metodo memorizador que nos permite mantener un cache de los elementos consultados y agilizar el proceso
+     * de consulta por medio de un mapa concurrente
+     * @param titulo
+     * @param cache
+     * @return String con la información de la pelicula con el titulo
+     */
     public String consultaApiMemo(String titulo,Map cache){
         if (cache.keySet().contains(titulo)){
             return (String) cache.get(titulo);
