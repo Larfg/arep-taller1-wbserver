@@ -2,15 +2,17 @@ package edu.escuelaing.app;
 
 import java.net.*;
 import java.io.*;
-
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 /**
  * @author Luis Felipe Giraldo Rodriguez
  * @version 1.0
  */
 public class HttpServer {
-    
 
     public static void main(String[] args) throws IOException {
+        System.out.println("Servidor funcionando ...");
+        Map<String, String> cache = new ConcurrentHashMap<String, String>();
         String lastLine = "";
         ServerSocket serverSocket = null;
         NetClient netClient=new NetClient();
@@ -25,7 +27,6 @@ public class HttpServer {
         while (running) {
             Socket clientSocket = null;
             try {
-                System.out.println("Listo para recibir ...");
                 clientSocket = serverSocket.accept();
             } catch (IOException e) {
                 System.err.println("Accept failed.");
@@ -37,7 +38,6 @@ public class HttpServer {
                             clientSocket.getInputStream()));
             String inputLine, outputLine;
             while ((inputLine = in.readLine()) != null) {
-                System.out.println("Received: " + inputLine);
                 if(inputLine.contains("titulo")){
                     lastLine = inputLine.split(":")[1].replace(" ","+");
                 }
@@ -52,12 +52,13 @@ public class HttpServer {
                     + "Content-Type:application/json\r\n"
                     + "\r\n"
                     // Content type para json
-                    + netClient.consultApi(lastLine);
+                    + netClient.consultaApiMemo(lastLine,cache);
             out.println(outputLine);
             out.close();
             in.close();
             clientSocket.close();
         }
         serverSocket.close();
+        System.out.println("Servidor apagado.");
     }
 }

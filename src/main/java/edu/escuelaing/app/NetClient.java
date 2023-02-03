@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Objects;
 
 public class NetClient {
@@ -54,6 +55,17 @@ public class NetClient {
             return "error";
         }
 
+    }
+
+    public String consultaApiMemo(String titulo,Map cache){
+        if (cache.keySet().contains(titulo)){
+            return (String) cache.get(titulo);
+        }
+        else{
+            String consulta = consultApi(titulo);
+            cache.put(titulo, consulta);
+            return consulta;
+        }
     }
 
 
